@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+    <CONFIG id="1" key="minhaKey1" project="http://localhost:8081/projeto-api-1" endpoint="/teste1"/>
+    <CONFIG id="2" key="minhaKey2" project="http://localhost:8080/projeto-api-2" endpoint="/teste2"/>
+
+</dataset>
