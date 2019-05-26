@@ -1,6 +1,7 @@
 package br.com.generic.api.genericapi.service;
 
 import br.com.generic.api.genericapi.component.GenericApiComponent;
+import br.com.generic.api.genericapi.exception.ValidationException;
 import br.com.generic.api.genericapi.model.GenericRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -28,7 +29,7 @@ public class ConfigServiceTest {
     @Mock
     private GenericApiComponent genericApiComponent;
 
-    ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper();
 
 
     @Before
@@ -37,9 +38,9 @@ public class ConfigServiceTest {
     }
 
     @Test
-    public void deve_retornar_body() throws IOException {
-        GenericRequest genericRequest = new GenericRequest();
-        Object genericResponse = configService.call(genericRequest);
+    public void deve_retornar_body() {
+        when(genericApiComponent.callAPI(any(GenericRequest.class))).thenReturn(new Object());
+        Object genericResponse = configService.call(montarRequest());
         assertNotNull(genericResponse);
     }
 
@@ -50,17 +51,31 @@ public class ConfigServiceTest {
 
         when(genericApiComponent.callAPI(any(GenericRequest.class))).thenReturn(mapper.readValue(json, Object.class));
 
-        GenericRequest genericRequest = new GenericRequest();
-        Object genericResponse = configService.call(genericRequest);
+        Object genericResponse = configService.call(montarRequest());
         Map map = mapper.convertValue(genericResponse, Map.class);
         assertEquals("aline", map.get("nome"));
     }
 
     @Test
-    public void deve_chamar_API_component() throws IOException {
-        GenericRequest genericRequest = new GenericRequest();
+    public void deve_chamar_API_component() {
+        GenericRequest genericRequest = montarRequest();
         configService.call(genericRequest);
         verify(genericApiComponent, times(1)).callAPI(eq(genericRequest));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void deve_cair_na_validacao() {
+        GenericRequest genericRequest = new GenericRequest();
+        configService.call(genericRequest);
+    }
+
+    private GenericRequest montarRequest() {
+        return GenericRequest.builder()
+                .key("xptoKey")
+                .method("GET")
+                .body(new Object())
+                .build();
+
     }
 
 }
