@@ -2,7 +2,9 @@ package br.com.generic.api.genericapi.service;
 
 import br.com.generic.api.genericapi.component.GenericApiComponent;
 import br.com.generic.api.genericapi.exception.ValidationException;
+import br.com.generic.api.genericapi.model.Config;
 import br.com.generic.api.genericapi.model.GenericRequest;
+import br.com.generic.api.genericapi.repository.ConfigRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.Before;
@@ -28,6 +30,9 @@ public class ConfigServiceTest {
 
     @Mock
     private GenericApiComponent genericApiComponent;
+    
+    @Mock
+    private ConfigRepository configRepository;
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -35,11 +40,12 @@ public class ConfigServiceTest {
     @Before
     public void setup() {
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        when(configRepository.findByKey(anyString())).thenReturn(new Config());
     }
 
     @Test
     public void deve_retornar_body() {
-        when(genericApiComponent.callAPI(any(GenericRequest.class))).thenReturn(new Object());
+        when(genericApiComponent. callAPI(any(GenericRequest.class), any(Config.class))).thenReturn(new Object());
         Object genericResponse = configService.call(montarRequest());
         assertNotNull(genericResponse);
     }
@@ -49,7 +55,7 @@ public class ConfigServiceTest {
 
         String json = "{\"nome\": \"aline\"}";
 
-        when(genericApiComponent.callAPI(any(GenericRequest.class))).thenReturn(mapper.readValue(json, Object.class));
+        when(genericApiComponent. callAPI(any(GenericRequest.class), any(Config.class))).thenReturn(mapper.readValue(json, Object.class));
 
         Object genericResponse = configService.call(montarRequest());
         Map map = mapper.convertValue(genericResponse, Map.class);
@@ -60,7 +66,7 @@ public class ConfigServiceTest {
     public void deve_chamar_API_component() {
         GenericRequest genericRequest = montarRequest();
         configService.call(genericRequest);
-        verify(genericApiComponent, times(1)).callAPI(eq(genericRequest));
+        verify(genericApiComponent, times(1)).callAPI(eq(genericRequest), any(Config.class));
     }
 
     @Test(expected = ValidationException.class)
