@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Map;
 
 @Data
 @Getter
@@ -14,10 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GenericRequest implements Serializable {
-
     private Object body;
-    private List<Object> headers;
     private String key;
     private String method;
-
+    private Map<String, String> headers;
+    private Map<String, String> params;
 }

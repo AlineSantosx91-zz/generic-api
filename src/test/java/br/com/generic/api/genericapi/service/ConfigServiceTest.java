@@ -16,8 +16,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -85,7 +84,7 @@ public class ConfigServiceTest {
 
     @Test(expected = ValidationException.class)
     public void dado_body_invalido_deve_cair_na_validacao() throws IOException {
-        List<Object> headers = getHeaders();
+        Map<String, String> headers = getHeaders();
         GenericRequest genericRequest = GenericRequest.builder()
                 .key("xptoKey")
                 .method("GET")
@@ -97,7 +96,7 @@ public class ConfigServiceTest {
 
     @Test(expected = ValidationException.class)
     public void dado_key_invalido_deve_cair_na_validacao() throws IOException {
-        List<Object> headers = getHeaders();
+        Map<String, String> headers = getHeaders();
         GenericRequest genericRequest = GenericRequest.builder()
                 .key(null)
                 .method("GET")
@@ -108,7 +107,7 @@ public class ConfigServiceTest {
 
     @Test(expected = ValidationException.class)
     public void dado_method_invalido_deve_cair_na_validacao() throws IOException {
-        List<Object> headers = getHeaders();
+        Map<String, String> headers = getHeaders();
         GenericRequest genericRequest = GenericRequest.builder()
                 .key("xptoKey")
                 .method("")
@@ -124,7 +123,7 @@ public class ConfigServiceTest {
     }
 
     private GenericRequest montarRequest() throws IOException {
-        List<Object> headers = getHeaders();
+        Map<String, String> headers = getHeaders();
         return GenericRequest.builder()
                 .key("xptoKey")
                 .headers(headers)
@@ -134,11 +133,9 @@ public class ConfigServiceTest {
 
     }
 
-    private List<Object> getHeaders() throws IOException {
-        String json = "{\"ContentType\": \"application/json\"}";
-        Object header = mapper.readValue(json, Object.class);
-        List<Object> headers = new ArrayList<>();
-        headers.add(header);
+    private  Map<String, String> getHeaders() throws IOException {
+        Map<String, String> headers = new LinkedHashMap<>();
+        headers.put("ContentType", "application/json");
         return headers;
     }
 
