@@ -34,6 +34,9 @@ public class ConfigService {
 
         if (genericRequest.getBody() == null)
             throw new ValidationException("Body é obrigatório");
+
+        if (genericRequest.getHeaders() == null || genericRequest.getHeaders().isEmpty())
+            throw new ValidationException("Headers é obrigatório");
     }
 
     private boolean isNullOrEmpty(String text) {

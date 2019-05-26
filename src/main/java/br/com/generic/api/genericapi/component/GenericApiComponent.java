@@ -9,7 +9,6 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class GenericApiComponent {
 
-
     private final RestTemplate restTemplate;
 
     public GenericApiComponent(RestTemplateBuilder restTemplateBuilder) {
